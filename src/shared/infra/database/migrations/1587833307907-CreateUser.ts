@@ -25,7 +25,7 @@ export default class CreateUser1587833307907 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'password_hash',
+            name: 'password',
             type: 'varchar',
             isNullable: false,
           },

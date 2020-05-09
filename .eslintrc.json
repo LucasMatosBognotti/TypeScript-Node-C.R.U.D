@@ -20,12 +20,15 @@
     "@typescript-eslint"
   ],
   "rules": {
-    "no-underscore-dangle":"off",
-    "class-methods-use-this":"off",
+    "no-underscore-dangle": "off",
+    "prettier/prettier": "error",
+    "class-methods-use-this": "off",
+    "no-useless-constructor": "off",
     "@typescript-eslint/camelcase": "off",
     "@typescript-eslint/no-unused-vars": ["error", {
       "argsIgnorePattern": "_"
     }],
+    "@typescript-eslint/interface-name-prefix": ["error", {"prefixWithI": "always"}],
     "import/extensions": [
       "error",
       "ignorePackages",

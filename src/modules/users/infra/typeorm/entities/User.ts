@@ -14,7 +14,7 @@ class User {
   email: string;
 
   @Column()
-  password_hash: string;
+  password: string;
 
   @Column()
   avatar: string;
