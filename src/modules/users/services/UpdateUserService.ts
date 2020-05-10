@@ -1,5 +1,4 @@
 import { hash } from 'bcryptjs';
-import { isUuid } from 'uuidv4';
 
 import { injectable, inject } from 'tsyringe';
 
@@ -25,10 +24,6 @@ class UpdateUserService {
   public async execute({
     id, name, email, password,
   }: IRequest): Promise<User> {
-    if (isUuid(id) === false) {
-      throw new AppError('id is not valid');
-    }
-
     const user = await this.usersRepository.findById(id);
 
     if (!user) {

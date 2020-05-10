@@ -1,2 +1,9 @@
 node_modules
+.vscode
+coverage
+build/
+temp/
 yarn.lock
+
+tmp/uploads/*
+!tmp/.gitkeep

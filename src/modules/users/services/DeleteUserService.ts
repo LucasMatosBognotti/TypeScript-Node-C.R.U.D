@@ -1,4 +1,3 @@
-import { isUuid } from 'uuidv4';
 import { injectable, inject } from 'tsyringe';
 
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
@@ -17,10 +16,6 @@ class DeleteUserService {
   ) {}
 
   public async execute({ id }: IRequest): Promise<string> {
-    if (isUuid(id) === false) {
-      throw new AppError('ID is not valid');
-    }
-
     const user = await this.usersRepository.findById(id);
 
     if (!user) {

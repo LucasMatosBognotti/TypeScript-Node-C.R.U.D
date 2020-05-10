@@ -1,9 +1,13 @@
 import { Router } from 'express';
 
 import userRouter from '@modules/users/infra/http/routes/users.routes';
+import sessionsRouter from '@modules/users/infra/http/routes/sessions.routes';
+import appointmentsRouter from '@modules/appointments/infra/http/routes/appointments.routes';
 
 const routes = Router();
 
 routes.use('/', userRouter);
+routes.use('/', sessionsRouter);
+routes.use('/', appointmentsRouter);
 
 export default routes;

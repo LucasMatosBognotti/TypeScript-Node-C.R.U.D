@@ -1,5 +1,3 @@
-import { isUuid } from 'uuidv4';
-
 import { injectable, inject } from 'tsyringe';
 
 import User from '@modules/users/infra/typeorm/entities/User';
@@ -19,10 +17,6 @@ class GetOneUserService {
   ) {}
 
   public async execute({ id }: IRequest): Promise<User> {
-    if (isUuid(id) === false) {
-      throw new AppError('ID is not valid');
-    }
-
     const user = await this.usersRepository.findById(id);
 
     if (!user) {

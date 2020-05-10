@@ -1,20 +1,12 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import GetAllUserService from '@modules/users/services/GetAllUserService';
 import GetOneUserService from '@modules/users/services/GetOneUserService';
 import CreateUserService from '@modules/users/services/CreateUserService';
 import UpdateUserService from '@modules/users/services/UpdateUserService';
 import DeleteUserService from '@modules/users/services/DeleteUserService';
 
 class UsersController {
-  public async index(req: Request, res: Response): Promise<Response> {
-    const getUsers = container.resolve(GetAllUserService);
-    const users = await getUsers.execute();
-
-    return res.json(users);
-  }
-
   public async show(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
 
