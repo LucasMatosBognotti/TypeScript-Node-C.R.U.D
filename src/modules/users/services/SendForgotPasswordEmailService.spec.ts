@@ -9,6 +9,7 @@ import AppError from '@shared/errors/AppError';
 let fakeUsersRepository: FakeUsersRepository;
 let fakeMailProvider: FakeMailProvider;
 let fakeUserTokensRepository: FakeUserTokensRepository;
+
 let sendForgotPasswordEmail: SendForgotPasswordEmailService;
 
 describe('SendForgotPassword', () => {

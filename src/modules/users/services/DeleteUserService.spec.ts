@@ -6,20 +6,28 @@ import DeleteUserService from '@modules/users/services/DeleteUserService';
 
 import AppError from '@shared/errors/AppError';
 
-describe('DeleteUser', () => {
-  it('should be able to delete one user', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashPRovider = new FakeHashProvider();
+let fakeUsersRepository: FakeUsersRepository;
+let fakeHashPRovider: FakeHashProvider;
 
-    const createUser = new CreateUserService(
+let createUser: CreateUserService;
+let deleteUser: DeleteUserService;
+
+describe('DeleteUser', () => {
+  beforeEach(() => {
+    fakeUsersRepository = new FakeUsersRepository();
+    fakeHashPRovider = new FakeHashProvider();
+
+    createUser = new CreateUserService(
       fakeUsersRepository,
       fakeHashPRovider,
     );
 
-    const deleteUser = new DeleteUserService(
+    deleteUser = new DeleteUserService(
       fakeUsersRepository,
     );
+  });
 
+  it('should be able to delete one user', async () => {
     const user = await createUser.execute({
       name: 'John Doe',
       email: 'johndoe@test.com',
@@ -34,12 +42,6 @@ describe('DeleteUser', () => {
   });
 
   it('should not be able to delete a user that does not exist', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-
-    const deleteUser = new DeleteUserService(
-      fakeUsersRepository,
-    );
-
     await expect(
       deleteUser.execute({
         id: 'non-existing-user',

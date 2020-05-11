@@ -6,20 +6,28 @@ import GetOneUserService from '@modules/users/services/GetOneUserService';
 
 import AppError from '@shared/errors/AppError';
 
-describe('GetOneUser', () => {
-  it('should be able to get one user', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashPRovider = new FakeHashProvider();
+let fakeUsersRepository: FakeUsersRepository;
+let fakeHashPRovider: FakeHashProvider;
 
-    const createUser = new CreateUserService(
+let createUser: CreateUserService;
+let getOne: GetOneUserService;
+
+describe('GetOneUser', () => {
+  beforeEach(() => {
+    fakeUsersRepository = new FakeUsersRepository();
+    fakeHashPRovider = new FakeHashProvider();
+
+    createUser = new CreateUserService(
       fakeUsersRepository,
       fakeHashPRovider,
     );
 
-    const getOne = new GetOneUserService(
+    getOne = new GetOneUserService(
       fakeUsersRepository,
     );
+  });
 
+  it('should be able to get one user', async () => {
     const user = await createUser.execute({
       name: 'John Doe',
       email: 'johndoe@test.com',
@@ -34,13 +42,7 @@ describe('GetOneUser', () => {
   });
 
   it('should not be able to get one user that does not exist', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-
-    const getOne = new GetOneUserService(
-      fakeUsersRepository,
-    );
-
-    expect(
+    await expect(
       getOne.execute({
         id: 'non-existing-user',
       }),

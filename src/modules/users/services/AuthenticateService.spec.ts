@@ -6,21 +6,29 @@ import CreateAutheticateService from '@modules/users/services/AuthenticateServic
 
 import AppError from '@shared/errors/AppError';
 
+let fakeUsersRepository: FakeUsersRepository;
+let fakeHashProvider: FakeHashProvider;
+
+let createUser: CreateUserService;
+let createAutheticate: CreateAutheticateService;
+
 describe('AutheticateUser', () => {
+  beforeEach(() => {
+    fakeUsersRepository = new FakeUsersRepository();
+    fakeHashProvider = new FakeHashProvider();
+
+    createUser = new CreateUserService(
+      fakeUsersRepository,
+      fakeHashProvider,
+    );
+
+    createAutheticate = new CreateAutheticateService(
+      fakeUsersRepository,
+      fakeHashProvider,
+    );
+  });
+
   it('should be able to authenticate the user', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashProvider = new FakeHashProvider();
-
-    const createUser = new CreateUserService(
-      fakeUsersRepository,
-      fakeHashProvider,
-    );
-
-    const createAutheticate = new CreateAutheticateService(
-      fakeUsersRepository,
-      fakeHashProvider,
-    );
-
     const user = await createUser.execute({
       name: 'John Doe',
       email: 'johndoe@test.com',
@@ -37,14 +45,6 @@ describe('AutheticateUser', () => {
   });
 
   it('should not be able to authenticate user that does not exist', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashProvider = new FakeHashProvider();
-
-    const createAutheticate = new CreateAutheticateService(
-      fakeUsersRepository,
-      fakeHashProvider,
-    );
-
     await expect(
       createAutheticate.execute({
         email: 'test@test.com',
@@ -54,19 +54,6 @@ describe('AutheticateUser', () => {
   });
 
   it('should not be able to authenticate user with invalid password', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashProvider = new FakeHashProvider();
-
-    const createUser = new CreateUserService(
-      fakeUsersRepository,
-      fakeHashProvider,
-    );
-
-    const createAutheticate = new CreateAutheticateService(
-      fakeUsersRepository,
-      fakeHashProvider,
-    );
-
     const user = await createUser.execute({
       name: 'John Doe',
       email: 'johndoe@test.com',

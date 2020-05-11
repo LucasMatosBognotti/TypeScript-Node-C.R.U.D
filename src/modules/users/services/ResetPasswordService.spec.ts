@@ -9,6 +9,7 @@ import AppError from '@shared/errors/AppError';
 let fakeUsersRepository: FakeUsersRepository;
 let fakeUserTokensRepository: FakeUserTokensRepository;
 let fakeHashProvider: FakeHashProvider;
+
 let resetPassword: ResetPasswordService;
 
 describe('ResetPassword', () => {

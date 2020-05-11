@@ -15,13 +15,13 @@ const upload = multer(uploadConfig);
 const usersController = new UsersController();
 const userAvatarController = new UserAvatarController();
 
-userRouter.get('/users/:id', usersController.show);
+userRouter.get('/users', Authentication, usersController.show);
 
 userRouter.post('/users', usersController.create);
 
-userRouter.put('/users/:id', usersController.update);
+userRouter.put('/users', Authentication, usersController.update);
 
-userRouter.delete('/users/:id', usersController.delete);
+userRouter.delete('/users', Authentication, usersController.delete);
 
 userRouter.patch('/avatar', Authentication, upload.single('avatar'), userAvatarController.update);
 

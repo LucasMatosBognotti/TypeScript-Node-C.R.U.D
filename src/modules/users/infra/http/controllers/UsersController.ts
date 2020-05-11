@@ -8,7 +8,7 @@ import DeleteUserService from '@modules/users/services/DeleteUserService';
 
 class UsersController {
   public async show(req: Request, res: Response): Promise<Response> {
-    const { id } = req.params;
+    const { id } = req.user;
 
     const getOneUser = container.resolve(GetOneUserService);
 
@@ -36,7 +36,7 @@ class UsersController {
   }
 
   public async update(req: Request, res: Response): Promise<Response> {
-    const { id } = req.params;
+    const { id } = req.user;
     const { name, email, password } = req.body;
 
     const updateUser = container.resolve(UpdateUserService);
@@ -54,7 +54,7 @@ class UsersController {
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {
-    const { id } = req.params;
+    const { id } = req.user;
 
     const deleteUser = container.resolve(DeleteUserService);
 

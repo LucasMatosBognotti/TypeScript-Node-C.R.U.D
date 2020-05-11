@@ -6,20 +6,30 @@ import UpdateUserService from '@modules/users/services/UpdateUserService';
 
 import AppError from '@shared/errors/AppError';
 
-describe('Update User', () => {
-  it('should be able to update one user', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashPRovider = new FakeHashProvider();
+let fakeUsersRepository: FakeUsersRepository;
+let fakeHashPRovider: FakeHashProvider;
 
-    const createUser = new CreateUserService(
+let createUser: CreateUserService;
+
+let updateUser: UpdateUserService;
+
+describe('Update User', () => {
+  beforeEach(() => {
+    fakeUsersRepository = new FakeUsersRepository();
+    fakeHashPRovider = new FakeHashProvider();
+
+    createUser = new CreateUserService(
       fakeUsersRepository,
       fakeHashPRovider,
     );
 
-    const updateUser = new UpdateUserService(
+    updateUser = new UpdateUserService(
       fakeUsersRepository,
+      fakeHashPRovider,
     );
+  });
 
+  it('should be able to updade', async () => {
     const user = await createUser.execute({
       name: 'John Doe',
       email: 'johndoe@test.com',
@@ -30,62 +40,42 @@ describe('Update User', () => {
       id: user.id,
       name: 'Marie',
       email: 'marie@test.com',
-      password: '123123',
     });
 
-    expect(update).toHaveProperty('id');
     expect(update.name).toBe('Marie');
   });
 
-  it('should not be able to update user that does not exist', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashPRovider = new FakeHashProvider();
-
-    const createUser = new CreateUserService(
-      fakeUsersRepository,
-      fakeHashPRovider,
-    );
-
-    const updateUser = new UpdateUserService(
-      fakeUsersRepository,
-    );
-
+  it('should be able to update one user', async () => {
     const user = await createUser.execute({
       name: 'John Doe',
       email: 'johndoe@test.com',
       password: '123456',
     });
 
-    await updateUser.execute({
+    const update = await updateUser.execute({
       id: user.id,
       name: 'Marie',
       email: 'marie@test.com',
+      old_password: '123456',
       password: '123123',
     });
 
+    expect(update.name).toBe('Marie');
+  });
+
+  it('should not be able to update user that does not exist', async () => {
     await expect(
       updateUser.execute({
         id: '123',
-        name: 'Marie',
-        email: 'marie@test.com',
-        password: '123123',
+        name: 'John Doe',
+        email: 'johndoe@test.com',
+        old_password: '123456',
+        password: '123',
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
 
   it('should not be able to update user with the same email', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashPRovider = new FakeHashProvider();
-
-    const createUser = new CreateUserService(
-      fakeUsersRepository,
-      fakeHashPRovider,
-    );
-
-    const updateUser = new UpdateUserService(
-      fakeUsersRepository,
-    );
-
     const user = await createUser.execute({
       name: 'John Doe',
       email: 'johndoe@test.com',
@@ -93,8 +83,36 @@ describe('Update User', () => {
     });
 
     await createUser.execute({
-      name: 'Marie',
+      name: 'Marie Doe',
       email: 'marie@test.com',
+      password: '123456',
+    });
+
+    await expect(
+      updateUser.execute({
+        id: user.id,
+        name: 'Marie',
+        email: 'marie@test.com',
+        password: '123123',
+        old_password: '123',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+
+    const user1 = await updateUser.execute({
+      id: user.id,
+      name: 'Marie',
+      email: 'johndoe@test.com',
+      old_password: '123456',
+      password: '123123',
+    });
+
+    expect(user1).toHaveProperty('id');
+  });
+
+  it('should not be able to upadate password without old password', async () => {
+    const user = await createUser.execute({
+      name: 'John Doe',
+      email: 'johndoe@test.com',
       password: '123456',
     });
 
@@ -106,14 +124,23 @@ describe('Update User', () => {
         password: '123123',
       }),
     ).rejects.toBeInstanceOf(AppError);
+  });
 
-    const user1 = await updateUser.execute({
-      id: user.id,
-      name: 'Marie',
+  it('should not be able to upadate the password with wrong old password', async () => {
+    const user = await createUser.execute({
+      name: 'John Doe',
       email: 'johndoe@test.com',
-      password: '123123',
+      password: '123456',
     });
 
-    expect(user1).toHaveProperty('id');
+    await expect(
+      updateUser.execute({
+        id: user.id,
+        name: 'Marie',
+        email: 'marie@test.com',
+        old_password: '123123',
+        password: '123123',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
 });

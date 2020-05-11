@@ -1,18 +1,11 @@
 import IMailProvider from '@shared/providers/MailProvider/models/IMailProvider';
-
-interface IMassage {
-  to: string;
-  body: string;
-}
+import ISendMailDTO from '@shared/providers/MailProvider/dtos/ISendMailDTO';
 
 class EtherealMailProvider implements IMailProvider {
-  private messages: IMassage[] = [];
+  private messages: ISendMailDTO[] = [];
 
-  public async sendMail(to: string, body: string): Promise<void> {
-    this.messages.push({
-      to,
-      body,
-    });
+  public async sendMail(message: ISendMailDTO): Promise<void> {
+    this.messages.push(message);
   }
 }
 
