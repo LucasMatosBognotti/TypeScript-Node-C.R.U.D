@@ -2,7 +2,7 @@ import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepo
 import FakeHashProvider from '@modules/users/providers/HashProvider/fakes/FakeHashProvider';
 
 import CreateUserService from '@modules/users/services/CreateUserService';
-import CreateAutheticateService from '@modules/users/services/CreateAutheticateService';
+import CreateAutheticateService from '@modules/users/services/AuthenticateService';
 
 import AppError from '@shared/errors/AppError';
 
@@ -32,29 +32,18 @@ describe('AutheticateUser', () => {
       password: user.password,
     });
 
-    expect(authentication).toHaveProperty('user');
     expect(authentication).toHaveProperty('token');
+    expect(authentication.user).toEqual(user);
   });
 
   it('should not be able to authenticate user that does not exist', async () => {
     const fakeUsersRepository = new FakeUsersRepository();
     const fakeHashProvider = new FakeHashProvider();
 
-    const createUser = new CreateUserService(
-      fakeUsersRepository,
-      fakeHashProvider,
-    );
-
     const createAutheticate = new CreateAutheticateService(
       fakeUsersRepository,
       fakeHashProvider,
     );
-
-    await createUser.execute({
-      name: 'John Doe',
-      email: 'johndoe@test.com',
-      password: '123456',
-    });
 
     await expect(
       createAutheticate.execute({

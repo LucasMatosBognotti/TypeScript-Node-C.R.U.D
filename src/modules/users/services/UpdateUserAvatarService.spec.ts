@@ -7,7 +7,7 @@ import UpdateUserAvatarService from '@modules/users/services/UpdateUserAvatarSer
 
 import AppError from '@shared/errors/AppError';
 
-describe('Update User', () => {
+describe('UpdateUserAvatar', () => {
   it('should be able to update one user avatar', async () => {
     const fakeUsersRepository = new FakeUsersRepository();
     const fakeHashProvider = new FakeHashProvider();
@@ -39,28 +39,16 @@ describe('Update User', () => {
 
   it('should not be able to update user that does not exist', async () => {
     const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashProvider = new FakeHashProvider();
     const fakeStorageProvider = new FakeStorageProvider();
-
-    const createUser = new CreateUserService(
-      fakeUsersRepository,
-      fakeHashProvider,
-    );
 
     const updateAvatar = new UpdateUserAvatarService(
       fakeUsersRepository,
       fakeStorageProvider,
     );
 
-    await createUser.execute({
-      name: 'John Doe',
-      email: 'johndoe@test.com',
-      password: '123456',
-    });
-
     await expect(
       updateAvatar.execute({
-        user_id: '123',
+        user_id: 'non-existing-user',
         avatarFilename: 'avatar.jpg',
       }),
     ).rejects.toBeInstanceOf(AppError);

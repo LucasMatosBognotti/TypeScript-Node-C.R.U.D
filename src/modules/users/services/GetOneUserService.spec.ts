@@ -35,26 +35,14 @@ describe('GetOneUser', () => {
 
   it('should not be able to get one user that does not exist', async () => {
     const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashPRovider = new FakeHashProvider();
-
-    const createUser = new CreateUserService(
-      fakeUsersRepository,
-      fakeHashPRovider,
-    );
 
     const getOne = new GetOneUserService(
       fakeUsersRepository,
     );
 
-    await createUser.execute({
-      name: 'John Doe',
-      email: 'johndoe@test.com',
-      password: '123456',
-    });
-
     expect(
       getOne.execute({
-        id: '123',
+        id: 'non-existing-user',
       }),
     ).rejects.toBeInstanceOf(AppError);
   });

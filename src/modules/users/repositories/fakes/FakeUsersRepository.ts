@@ -20,12 +20,6 @@ class FakeUsersRepository implements IUsersRepository {
     return findEmail;
   }
 
-  public async findAll(): Promise<User[] | undefined> {
-    const findAll = this.users;
-
-    return findAll;
-  }
-
   public async create({ name, email, password }: ICreateUserDTO): Promise<User> {
     const user = new User();
 

@@ -35,26 +35,14 @@ describe('DeleteUser', () => {
 
   it('should not be able to delete a user that does not exist', async () => {
     const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashPRovider = new FakeHashProvider();
-
-    const createUser = new CreateUserService(
-      fakeUsersRepository,
-      fakeHashPRovider,
-    );
 
     const deleteUser = new DeleteUserService(
       fakeUsersRepository,
     );
 
-    await createUser.execute({
-      name: 'John Doe',
-      email: 'johndoe@test.com',
-      password: '123456',
-    });
-
     await expect(
       deleteUser.execute({
-        id: '123',
+        id: 'non-existing-user',
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
