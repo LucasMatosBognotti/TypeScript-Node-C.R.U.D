@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import multer from 'multer';
 
+import { celebrate, Segments, Joi } from 'celebrate';
+
 import uploadConfig from '@config/upload';
 
 import UsersController from '@modules/users/infra/http/controllers/UsersController';
@@ -17,9 +19,23 @@ const userAvatarController = new UserAvatarController();
 
 userRouter.get('/users', Authentication, usersController.show);
 
-userRouter.post('/users', usersController.create);
+userRouter.post('/users', celebrate({
+  [Segments.BODY]: {
+    name: Joi.string().required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+  },
+}), usersController.create);
 
-userRouter.put('/users', Authentication, usersController.update);
+userRouter.put('/users', Authentication, celebrate({
+  [Segments.BODY]: {
+    name: Joi.string().required(),
+    email: Joi.string().email().required(),
+    old_password: Joi.string(),
+    password: Joi.string(),
+    password_confirmation: Joi.string().valid(Joi.ref('password')),
+  },
+}), usersController.update);
 
 userRouter.delete('/users', Authentication, usersController.delete);
 

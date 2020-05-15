@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
+import { classToClass } from 'class-transformer';
 
 import GetOneUserService from '@modules/users/services/GetOneUserService';
 import CreateUserService from '@modules/users/services/CreateUserService';
@@ -14,9 +15,7 @@ class UsersController {
 
     const user = await getOneUser.execute({ id });
 
-    delete user.password;
-
-    return res.json(user);
+    return res.json({ user: classToClass(user) });
   }
 
   public async create(req: Request, res: Response): Promise<Response> {
@@ -30,14 +29,14 @@ class UsersController {
       password,
     });
 
-    delete user.password;
-
-    return res.json(user);
+    return res.json({ user: classToClass(user) });
   }
 
   public async update(req: Request, res: Response): Promise<Response> {
     const { id } = req.user;
-    const { name, email, password } = req.body;
+    const {
+      name, email, password, old_password,
+    } = req.body;
 
     const updateUser = container.resolve(UpdateUserService);
 
@@ -46,11 +45,10 @@ class UsersController {
       name,
       email,
       password,
+      old_password,
     });
 
-    delete user.password;
-
-    return res.json(user);
+    return res.json({ user: classToClass(user) });
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {
@@ -58,9 +56,9 @@ class UsersController {
 
     const deleteUser = container.resolve(DeleteUserService);
 
-    const user = await deleteUser.execute({ id });
+    const message = await deleteUser.execute({ id });
 
-    return res.json(user);
+    return res.json(message);
   }
 }
 

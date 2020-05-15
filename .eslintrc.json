@@ -21,6 +21,7 @@
     "@typescript-eslint"
   ],
   "rules": {
+    "max-len": ["error", { "code": 200 }],
     "no-underscore-dangle": "off",
     "class-methods-use-this": "off",
     "no-useless-constructor": "off",

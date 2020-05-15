@@ -19,6 +19,11 @@ export default class CreateAppointments1589038683599 implements MigrationInterfa
             isNullable: true,
           },
           {
+            name: 'user_id',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
             name: 'date',
             type: 'timestamp with time zone',
             isNullable: false,
@@ -36,10 +41,18 @@ export default class CreateAppointments1589038683599 implements MigrationInterfa
         ],
         foreignKeys: [
           {
-            name: 'Appointments',
+            name: 'AppointmentsProvider',
             referencedTableName: 'users',
             referencedColumnNames: ['id'],
             columnNames: ['provider_id'],
+            onDelete: 'SET NULL',
+            onUpdate: 'CASCADE',
+          },
+          {
+            name: 'AppointmentsUser',
+            referencedTableName: 'users',
+            referencedColumnNames: ['id'],
+            columnNames: ['user_id'],
             onDelete: 'SET NULL',
             onUpdate: 'CASCADE',
           },
